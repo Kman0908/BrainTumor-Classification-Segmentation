@@ -3,5 +3,25 @@ name = "braintumor-classification-segmentation"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = []
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "albumentations>=2.0.8",
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "opendatasets>=0.1.22",
+    "pandas>=3.0.5",
+    "scikit-learn>=1.9.0",
+    "segmentation-models-pytorch>=0.5.0",
+    "torch>=2.13.0",
+    "torchvision>=0.28.0",
+]
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+torchaudio = { index = "pytorch-cu126" }
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
