@@ -7,6 +7,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "albumentations>=2.0.8",
     "ipykernel>=7.3.0",
+    "kagglehub>=1.0.2",
     "matplotlib>=3.11.1",
     "numpy>=2.5.2",
     "opendatasets>=0.1.22",
