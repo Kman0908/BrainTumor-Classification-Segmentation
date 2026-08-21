@@ -121,7 +121,7 @@ class DataIngestion:
                 }
             }
 
-            save_path = os.path.join(os.getcwd(), 'artifacts', 'manifests')
+            save_path = Path(os.getcwd()) / 'artifacts' / 'manifests'
             os.makedirs(save_path, exist_ok = True)
 
             for task, split in dataframes.items():

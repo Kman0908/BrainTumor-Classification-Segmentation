@@ -1,3 +1,14 @@
 data_ingestion:
   kaggle_dataset_url: 'https://www.kaggle.com/datasets/briscdataset/brisc2025'
   raw_data_manifest: 'artifacts/manifests'
+
+classification:
+  image_size: 224
+  batch_size: 32
+  num_workers: 0
+
+segmentation:
+  image_size: 512
+  batch_size: 8
+  num_workers: 0
+  
