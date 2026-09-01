@@ -1,4 +1,5 @@
 import os
+import hashlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -6,6 +7,11 @@ from src.logger import logging
 from src.exception import CustomException
 from sklearn.model_selection import train_test_split
 from src.entity.config_entity import DataIngestionConfig
+
+
+def hash_file(path: str) -> str:
+    with open(path, 'rb') as f:
+        return hashlib.md5(f.read()).hexdigest()
 
 
 class DataIngestion:
@@ -30,7 +36,7 @@ class DataIngestion:
 
             test_labels = []
             test_images = []
-            
+
             root_dir = path / 'classification_task' / 'test'
             for label in os.listdir(root_dir):
                 class_dir = root_dir / label
@@ -39,6 +45,26 @@ class DataIngestion:
                     test_images.append(str(class_dir / image))
 
             test = pd.DataFrame(zip(test_images, test_labels), columns = ['image', 'label'])
+
+            logging.info('Hashing images for duplicate detection')
+            train['hash'] = train['image'].apply(hash_file)
+            test['hash'] = test['image'].apply(hash_file)
+
+            before_train = len(train)
+            train = train.drop_duplicates(subset='hash', keep='first').reset_index(drop=True)
+            logging.info(f'Dropped {before_train - len(train)} duplicate images within train')
+
+            before_test = len(test)
+            test = test.drop_duplicates(subset='hash', keep='first').reset_index(drop=True)
+            logging.info(f'Dropped {before_test - len(test)} duplicate images within test')
+
+            overlap = set(train['hash']) & set(test['hash'])
+            before_overlap = len(train)
+            train = train[~train['hash'].isin(overlap)].reset_index(drop=True)
+            logging.info(f'Dropped {before_overlap - len(train)} train images duplicated in test (overlap: {len(overlap)} hashes)')
+
+            train = train.drop(columns=['hash'])
+            test = test.drop(columns=['hash'])
 
             train, validation = train_test_split(train, test_size = 0.3, shuffle = True, stratify = train['label'], random_state = 42)
             validation = validation.reset_index(drop = True)
@@ -49,11 +75,11 @@ class DataIngestion:
             logging.info(f'Created validation dataframe. \nDemo:\n{validation.head()}\nShape:{validation.shape}')
 
             return train, test, validation
-        
+
         except Exception as e:
             logging.exception(f'Error occurred at DataIngestion.classification_manifest')
             raise CustomException(e)
-        
+
     def segmentation_manifest(self, path: Path) -> pd.DataFrame:
         try:
             logging.info('Creating Train, Test, and Validation for segmentation task')
@@ -84,7 +110,27 @@ class DataIngestion:
 
             test = pd.DataFrame(zip(test_images, test_mask), columns = ['image', 'mask'])
 
-            train, validation = train_test_split(train, test_size = 0.3, shuffle = True, random_state = 42)
+            logging.info('Hashing images for duplicate detection (segmentation)')
+            train['hash'] = train['image'].apply(hash_file)
+            test['hash'] = test['image'].apply(hash_file)
+
+            before_train = len(train)
+            train = train.drop_duplicates(subset='hash', keep='first').reset_index(drop=True)
+            logging.info(f'Dropped {before_train - len(train)} duplicate images within train')
+
+            before_test = len(test)
+            test = test.drop_duplicates(subset='hash', keep='first').reset_index(drop=True)
+            logging.info(f'Dropped {before_test - len(test)} duplicate images within test')
+
+            overlap = set(train['hash']) & set(test['hash'])
+            before_overlap = len(train)
+            train = train[~train['hash'].isin(overlap)].reset_index(drop=True)
+            logging.info(f'Dropped {before_overlap - len(train)} train images duplicated in test (overlap: {len(overlap)} hashes)')
+
+            train = train.drop(columns=['hash'])
+            test = test.drop(columns=['hash'])
+
+            train, validation = train_test_split(train, test_size = 0.2, shuffle = True, random_state = 42)
             validation = validation.reset_index(drop = True)
             train = train.reset_index(drop = True)
 
@@ -93,7 +139,7 @@ class DataIngestion:
             logging.info(f'Created validation dataframe. \nDemo:\n{validation.head()}\nShape:{validation.shape}')
 
             return train, test, validation
-        
+
         except Exception as e:
             logging.exception(f'Error occurred at DataIngestion.segmentation_manifest')
             raise CustomException(e)

@@ -17,3 +17,15 @@ class Classification:
     data_transformation: DataTrasnformationConfig
     epochs: int
     patience: int
+
+@dataclass 
+class ModelTrainerConfig:
+    num_classes: int
+    learning_rate: float
+    checkpoint_dir: str
+    epochs: int
+
+@dataclass
+class ModelEvaluatonConfig:
+    checkpoint_dir: str
+    num_classes: int

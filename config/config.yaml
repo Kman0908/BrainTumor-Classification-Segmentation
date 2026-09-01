@@ -4,11 +4,20 @@ data_ingestion:
 
 classification:
   image_size: 224
-  batch_size: 32
+  batch_size: 64
   num_workers: 0
 
 segmentation:
   image_size: 512
   batch_size: 8
   num_workers: 0
-  
+
+model_trainer:
+  num_classes: 4
+  epoch: 30
+  learning_rate: 0.001
+  checkpoint_dir: 'artifacts/objects'
+
+model_evaluation:
+  checkpoint_dir: 'artifacts/objects/classification.pth'
+  num_classes: 4

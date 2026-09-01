@@ -17,15 +17,15 @@ IMAGENET_STD = [0.229, 0.224, 0.225]
 
 def transformer(config: DataTrasnformationConfig):
     train_transform = transforms.Compose([
+        transforms.RandomResizedCrop(config.image_size, scale = (0.85, 1)),
         transforms.RandomRotation(degrees = 10),
-        transforms.Resize((config.image_size + 1, config.image_size + 1)),
+        transforms.ColorJitter(brightness = 0.1, contrast = 0.1),
         transforms.CenterCrop(config.image_size),
         transforms.ToTensor(),
         transforms.Normalize(mean = IMAGENET_MEAN, std = IMAGENET_STD)
     ])
     val_transform = transforms.Compose([
-        transforms.Resize((config.image_size + 1, config.image_size + 1)),
-        transforms.CenterCrop(config.image_size),
+        transforms.Resize((config.image_size, config.image_size)),
         transforms.ToTensor(),
         transforms.Normalize(mean = IMAGENET_MEAN, std = IMAGENET_STD)
     ])
@@ -72,12 +72,12 @@ class DataTransformation:
             val_dataset = CustomData(val_transformation, self.val, self.le)
 
             train_loader = DataLoader(train_dataset, batch_size = self.config.batch_size, shuffle = True, num_workers = self.config.num_workers)
-            test_loader = DataLoader(test_dataset, batch_size = self.config.batch_size, shuffle = True, num_workers = self.config.num_workers)
-            val_loader = DataLoader(val_dataset, batch_size = self.config.batch_size, shuffle = True, num_workers = self.config.num_workers)
+            test_loader = DataLoader(test_dataset, batch_size = self.config.batch_size, shuffle = False, num_workers = self.config.num_workers)
+            val_loader = DataLoader(val_dataset, batch_size = self.config.batch_size, shuffle = False, num_workers = self.config.num_workers)
 
             logging.info(f'Data Transformation completed')
 
-            return train_loader, test_loader, val_loader
+            return train_loader, test_loader, val_loader, self.le.classes_
         except Exception as e:
             logging.exception(f'Error occurred at DataTransformation.initiate_transformation')
             raise CustomException(e)

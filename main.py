@@ -5,6 +5,8 @@ from src.entity import config_entity
 from sklearn.preprocessing import LabelEncoder
 from src.components.data_ingestion import DataIngestion
 from src.components.classification.data_transformation import DataTransformation
+from src.components.classification.model_trainer import ModelTrainer
+from src.components.classification.model_evaluation import ModelEvaluation
 
 le = LabelEncoder()
 
@@ -23,6 +25,19 @@ data_transformation_config = config_entity.DataTrasnformationConfig(
     num_workers = classification['num_workers']
 )
 
+mt_conf = yaml_config['model_trainer']
+model_trainer_config = config_entity.ModelTrainerConfig(
+    num_classes = mt_conf['num_classes'],
+    learning_rate = mt_conf['learning_rate'],
+    checkpoint_dir = mt_conf['checkpoint_dir'],
+    epochs = mt_conf['epoch']
+)
+
+me_conf = yaml_config['model_evaluation']
+evlaution = config_entity.ModelEvaluatonConfig(
+    checkpoint_dir = me_conf['checkpoint_dir'],
+    num_classes = me_conf['num_classes']
+)
 
 if __name__ == "__main__":
     # data ingestion
@@ -41,4 +56,12 @@ if __name__ == "__main__":
     le.fit(train_df['label'])
     
     data_transformation_obj = DataTransformation(data_transformation_config, train_df, test_df, val_df, le)
-    classification_train, classification_test, classification_val = data_transformation_obj.initiate_transformation()
+    classification_train, classification_test, classification_val, class_map = data_transformation_obj.initiate_transformation()
+
+    # model training
+    # model_trainer_obj = ModelTrainer(model_trainer_config, classification_train, classification_val)
+    # model_trainer_obj.train()
+
+    # model evaluation
+    model_eval_obj = ModelEvaluation(evlaution, classification_test, class_map)
+    model_eval_obj.evaluate()
