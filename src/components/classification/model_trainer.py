@@ -22,8 +22,6 @@ class ModelTrainer:
         logging.info(f'Training using device: {self.device}')
 
     def _compute_class_weights(self):
-        # Pull encoded labels straight from the train dataset (not val/test —
-        # weights should reflect the distribution the model is actually trained on).
         dataset = self.train_loader.dataset
         labels_str = dataset.dataframe['label'].values
         labels_enc = dataset.le.transform(labels_str)
@@ -47,10 +45,6 @@ class ModelTrainer:
             class_weights = self._compute_class_weights()
             criterian = nn.CrossEntropyLoss(weight=class_weights)
 
-            # Switched checkpoint selection from raw accuracy to macro-F1. Accuracy is
-            # dominated by your easy majority classes (no_tumor, pituitary), so a model
-            # could look "best" on accuracy while meningioma quietly gets worse. Macro-F1
-            # weights all classes equally, so it actually reflects meningioma performance.
             best_val_score = 0.0
             counter = 0
             patience = 5

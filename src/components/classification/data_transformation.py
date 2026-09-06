@@ -10,12 +10,12 @@ from torchvision.transforms import transforms
 
 from src.logger import logging
 from src.exception import CustomException
-from src.entity.config_entity import DataTrasnformationConfig
+from src.entity.config_entity import DataTransformationConfig
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
-def transformer(config: DataTrasnformationConfig):
+def transformer(config: DataTransformationConfig):
     train_transform = transforms.Compose([
         transforms.RandomResizedCrop(config.image_size, scale = (0.85, 1)),
         transforms.RandomRotation(degrees = 10),
@@ -54,7 +54,7 @@ class CustomData(Dataset):
         return image, label
     
 class DataTransformation:
-    def __init__(self, config: DataTrasnformationConfig, train: pd.DataFrame, test: pd.DataFrame, val: pd.DataFrame, le: LabelEncoder):
+    def __init__(self, config: DataTransformationConfig, train: pd.DataFrame, test: pd.DataFrame, val: pd.DataFrame, le: LabelEncoder):
         self.config = config
         self.train = train
         self.test = test

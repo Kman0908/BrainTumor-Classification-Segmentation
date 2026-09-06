@@ -27,3 +27,14 @@ torchaudio = { index = "pytorch-cu126" }
 name = "pytorch-cu126"
 url = "https://download.pytorch.org/whl/cu126"
 explicit = true
+
+[tool.basedpyright]
+typeCheckingMode = "basic"
+reportUnusedImport = "none"
+reportMissingTypeStubs = "none"
+typeCheckingMode = "off"
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.39.10",
+]

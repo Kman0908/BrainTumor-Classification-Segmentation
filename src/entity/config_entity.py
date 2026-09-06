@@ -7,14 +7,20 @@ class DataIngestionConfig:
     raw_data_manifest: Path
 
 @dataclass
-class DataTrasnformationConfig:
+class DataTransformationConfig:
     image_size: int
     batch_size: int
     num_workers: int
 
 @dataclass
+class Segmentation:
+    data_transformation: DataTransformationConfig
+    epochs: int
+    patience: int
+
+@dataclass
 class Classification:
-    data_transformation: DataTrasnformationConfig
+    data_transformation: DataTransformationConfig
     epochs: int
     patience: int
 
