@@ -53,40 +53,40 @@ if __name__ == "__main__":
     data_ingestion_obj = DataIngestion(data_ingestion_config)
     manifest_path = data_ingestion_obj.initiate_ingestion()
 
-    # # data transformation
-    # train = manifest_path / 'classification' / 'train.csv'
-    # test = manifest_path / 'classification' / 'test.csv'
-    # val = manifest_path / 'classification' / 'val.csv'
-
-    # train_df = pd.read_csv(train)
-    # test_df = pd.read_csv(test)
-    # val_df = pd.read_csv(val)
-
-    # le.fit(train_df['label'])
-    
-    # classification_transformation_obj = DataTransformation(classification_config, train_df, test_df, val_df, le)
-    # classification_train, classification_test, classification_val, class_map = classification_transformation_obj.initiate_transformation()
-
-    # # model training
-    # model_trainer_obj = ModelTrainer(model_trainer_config, classification_train, classification_val)
-    # model_trainer_obj.train()
-
-    # # model evaluation
-    # model_eval_obj = ModelEvaluation(evlaution, classification_test, class_map)
-    # model_eval_obj.evaluate()
-
     # data transformation
-    train_s = manifest_path / 'segmentation' / 'train.csv'
-    test_s = manifest_path / 'segmentation' / 'test.csv'
-    val_s = manifest_path / 'segmentation' / 'val.csv'
+    train = manifest_path / 'classification' / 'train.csv'
+    test = manifest_path / 'classification' / 'test.csv'
+    val = manifest_path / 'classification' / 'val.csv'
 
-    train_df_s = pd.read_csv(train_s)
-    test_df_s = pd.read_csv(test_s)
-    val_df_s = pd.read_csv(val_s)
+    train_df = pd.read_csv(train)
+    test_df = pd.read_csv(test)
+    val_df = pd.read_csv(val)
 
-    segmentation_transformation_obj = Transformer(config = segmentation_config, train = train_df_s, test = test_df_s, val = val_df_s)
-    segmentation_train, segmentation_test, segmentation_val = segmentation_transformation_obj.initiate_transformation()
+    le.fit(train_df['label'])
+    
+    classification_transformation_obj = DataTransformation(classification_config, train_df, test_df, val_df, le)
+    classification_train, classification_test, classification_val, class_map = classification_transformation_obj.initiate_transformation()
 
     # model training
-    model_trainer_obj = Trainer(model_trainer_config, segmentation_train, segmentation_val)
+    model_trainer_obj = ModelTrainer(model_trainer_config, classification_train, classification_val)
     model_trainer_obj.train()
+
+    # model evaluation
+    model_eval_obj = ModelEvaluation(evlaution, classification_test, class_map)
+    model_eval_obj.evaluate()
+
+    # # data transformation
+    # train_s = manifest_path / 'segmentation' / 'train.csv'
+    # test_s = manifest_path / 'segmentation' / 'test.csv'
+    # val_s = manifest_path / 'segmentation' / 'val.csv'
+
+    # train_df_s = pd.read_csv(train_s)
+    # test_df_s = pd.read_csv(test_s)
+    # val_df_s = pd.read_csv(val_s)
+
+    # segmentation_transformation_obj = Transformer(config = segmentation_config, train = train_df_s, test = test_df_s, val = val_df_s)
+    # segmentation_train, segmentation_test, segmentation_val = segmentation_transformation_obj.initiate_transformation()
+
+    # # model training
+    # model_trainer_obj = Trainer(model_trainer_config, segmentation_train, segmentation_val)
+    # model_trainer_obj.train()
