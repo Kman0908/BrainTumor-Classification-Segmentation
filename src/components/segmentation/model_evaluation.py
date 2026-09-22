@@ -87,7 +87,7 @@ class ModelEvaluation:
             logging.info('Loading model')
             model = Model(freeze_layers=False).to(self.device)
             path = Path(self.config.checkpoint_dir) / 'segmentation.pth'
-            model.load_state_dict(torch.load(path, map_location=self.device))
+            model.load_state_dict(torch.load(path, map_location=self.device, weights_only = False))
             model.eval()
             logging.info('Model loaded')
 

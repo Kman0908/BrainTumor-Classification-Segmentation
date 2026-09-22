@@ -35,3 +35,4 @@ class ModelTrainerConfig:
 class ModelEvaluationConfig:
     checkpoint_dir: str
     num_classes: int
+    threshold: float

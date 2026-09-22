@@ -25,7 +25,7 @@ class ModelEvaluation:
                 raise FileNotFoundError(f'No Checkpoint found at {checkpoint_dir}')
 
             model = Model(self.config.num_classes, True)
-            model.load_state_dict(torch.load(checkpoint_dir, map_location = self.device))
+            model.load_state_dict(torch.load(checkpoint_dir, map_location = self.device, weights_only = False))
             model.to(self.device)
 
             logging.info(f'Model loaded')

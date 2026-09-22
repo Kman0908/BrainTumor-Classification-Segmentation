@@ -38,9 +38,10 @@ model_trainer_config = config_entity.ModelTrainerConfig(
 )
 
 me_conf = yaml_config['model_evaluation']
-evlaution = config_entity.ModelEvaluatonConfig(
+evlaution = config_entity.ModelEvaluationConfig(
     checkpoint_dir = me_conf['checkpoint_dir'],
-    num_classes = me_conf['num_classes']
+    num_classes = me_conf['num_classes'],
+    threshold = me_conf['threshold']
 )
 
 segmentation = yaml_config['segmentation']

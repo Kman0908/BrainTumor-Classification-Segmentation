@@ -21,3 +21,4 @@ model_trainer:
 model_evaluation:
   checkpoint_dir: 'artifacts/objects'
   num_classes: 4
+  threshold: 0.50
