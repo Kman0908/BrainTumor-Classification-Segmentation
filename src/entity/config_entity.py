@@ -32,6 +32,6 @@ class ModelTrainerConfig:
     epochs: int
 
 @dataclass
-class ModelEvaluatonConfig:
+class ModelEvaluationConfig:
     checkpoint_dir: str
     num_classes: int

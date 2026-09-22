@@ -2,6 +2,7 @@ import os
 import torch
 import numpy as np
 from scipy import ndimage
+from pathlib import Path
 
 from src.logger import logging
 from src.exception import CustomException
@@ -85,7 +86,8 @@ class ModelEvaluation:
         try:
             logging.info('Loading model')
             model = Model(freeze_layers=False).to(self.device)
-            model.load_state_dict(torch.load(self.config.model_path, map_location=self.device))
+            path = Path(self.config.checkpoint_dir) / 'segmentation.pth'
+            model.load_state_dict(torch.load(path, map_location=self.device))
             model.eval()
             logging.info('Model loaded')
 

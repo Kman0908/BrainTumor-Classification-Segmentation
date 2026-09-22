@@ -19,5 +19,5 @@ model_trainer:
   checkpoint_dir: 'artifacts/objects'
 
 model_evaluation:
-  checkpoint_dir: 'artifacts/objects/classification.pth'
+  checkpoint_dir: 'artifacts/objects'
   num_classes: 4

@@ -5,11 +5,11 @@ from pathlib import Path
 from src.logger import logging
 from src.exception import CustomException
 from src.components.classification.model import Model
-from src.entity.config_entity import ModelEvaluatonConfig
+from src.entity.config_entity import ModelEvaluationConfig
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 class ModelEvaluation:
-    def __init__(self, config: ModelEvaluatonConfig, test_loader, class_map):
+    def __init__(self, config: ModelEvaluationConfig, test_loader, class_map):
         self.config = config
         self.test_loader = test_loader
         self.class_label = class_map
@@ -19,7 +19,7 @@ class ModelEvaluation:
     def load_model(self) -> Model:
         try:
             logging.info(f'Loading model')
-            checkpoint_dir = Path(self.config.checkpoint_dir)
+            checkpoint_dir = Path(self.config.checkpoint_dir) / 'classification.pth'
 
             if not checkpoint_dir.exists():
                 raise FileNotFoundError(f'No Checkpoint found at {checkpoint_dir}')
