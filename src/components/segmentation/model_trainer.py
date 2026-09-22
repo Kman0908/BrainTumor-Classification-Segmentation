@@ -36,7 +36,7 @@ class ModelTrainer:
         self.config = config
         self.train_loader = train_loader
         self.val_loader = val_loader
-        self.save_path = os.path.join(self.config.checkpoint_dir, 'segmentaion.pth')
+        self.save_path = os.path.join(self.config.checkpoint_dir, 'segmentation.pth')
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         logging.info(f'Training using device: {self.device}')
     

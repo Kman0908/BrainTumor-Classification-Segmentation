@@ -95,3 +95,4 @@ if __name__ == "__main__":
 
     # model evaluation
     model_eval_obj = Evaluator(evlaution, test_loader = segmentation_test)
+    model_eval_obj.evaluate()
